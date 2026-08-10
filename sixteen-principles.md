@@ -936,3 +936,5 @@ TechVera, a European LLM platform, and the production installation
 referred to throughout is that platform. The model described here is how
 it is actually built and operated; the views and any errors are the
 author's own.*
+
+*Haag, Lower Austria — August 2026*
