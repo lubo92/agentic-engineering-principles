@@ -1,0 +1,17 @@
+cff-version: 1.2.0
+message: "If you reference this work, please cite it as below."
+title: "Sixteen principles for software organizations where no human reads the code"
+authors:
+  - family-names: "Lubowski"
+    given-names: "Wolfgang"
+    affiliation: "TechVera"
+version: 1.0.0
+date-released: 2026-08-10
+license: CC-BY-4.0
+repository: "https://github.com/REPLACE-USERNAME/agentic-engineering-principles"
+abstract: >-
+  A governance model for agentic engineering: sixteen operating principles
+  for software organizations in which humans no longer review code —
+  authority, evidence, verification against twin environments, a single
+  typed register, and the measurements that keep the harness itself
+  understandable. Running in production.
