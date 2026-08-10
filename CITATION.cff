@@ -8,7 +8,7 @@ authors:
 version: 1.0.0
 date-released: 2026-08-10
 license: CC-BY-4.0
-repository: "https://github.com/REPLACE-USERNAME/agentic-engineering-principles"
+repository: "https://github.com/lubo92/agentic-engineering-principles"
 abstract: >-
   A governance model for agentic engineering: sixteen operating principles
   for software organizations in which humans no longer review code —
