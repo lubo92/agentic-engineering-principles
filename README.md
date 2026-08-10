@@ -20,8 +20,8 @@ numbers quoted in Part II come from that installation.
 ## Author
 
 Wolfgang Lubowski — co-founder of [TechVera](https://techvera.ai), the
-EU LLM platform these principles operate. This document is personal work;
-the platform serves as its case study.
+EU LLM platform these principles operate. The document grew out of that
+work; the platform serves as its case study.
 
 ## Status and feedback
 
