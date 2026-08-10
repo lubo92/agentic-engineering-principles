@@ -42,7 +42,7 @@ reviews their own work.
 
 #### 1. Humans write the user journeys, the requirements, and the rules of the outer harness; agents make every technical decision.
 
-Humans own exactly three artifacts. The **journeys** describe the observable
+Humans own exactly three classes of normative artifacts. The **journeys** describe the observable
 target behavior of the platform from the perspective of users, operators,
 failure cases, data, and security — with numbered, individually testable
 acceptance criteria. The **requirements** state functional and
@@ -54,7 +54,11 @@ architecture, technology choices, structure, code — belongs to the agentic
 layer. No human reads diffs; correctness is established by automated gates,
 not by review. Where an implementation reveals that a human decision is
 missing, that gap is escalated as a decision request, never
-decided silently in code.
+decided silently in code. The human acts that remain in operation —
+answering decision requests, ruling on findings, triggering promotion —
+are not exceptions to this boundary but exercises of it: each one applies
+or amends a norm. The line does not separate humans from activity; it
+separates deciding what shall count from deciding how to build.
 
 #### 2. Authority is layered: harness rules above journeys and requirements, above tests and ADRs, above code — and each layer is protected in proportion to its power.
 
@@ -79,10 +83,15 @@ projections. It is deliberately non-blocking — humans keep the last word
 over what they wrote — but it **requires acknowledgment**: the
 report is worked through or explicitly accepted, and the acknowledgment is
 recorded in the register. The mirror image holds for the artifacts agents
-own: ADRs are append-only decision records — a changed decision is a new,
-superseding record — and the session that proposes a change to tests or ADRs
-never ratifies it; a separate judge examines every such change against the
-journeys, the requirements, and the harness rules — never against the code.
+own, with a deliberate asymmetry. Tightening is free: new tests, stricter
+assertions and new constraining ADRs merge with the change that brings
+them — they can only strengthen the oracle, and a wrongly added test
+surfaces on its own by blocking work. Weakening is a guarded act: removing
+or relaxing a test, or superseding an ADR, is ratified by a separate judge
+in a fresh session, examined against the journeys, the requirements and
+the harness rules — never against the code, and never by the session that
+proposed it. ADRs stay append-only: a changed decision is a new,
+superseding record.
 Each side reviews the other, and nobody reviews themselves.
 
 #### 4. Separation of powers: The agent session that implements a change never judges it; implementer and verifier are always separate agent sessions.
@@ -107,7 +116,7 @@ all: agents that evaluate their own output systematically overestimate it.
 What checks exist, what each of them is allowed to do, and what counts as
 evidence.
 
-#### 5. Only deterministic tests can block a merge; an AI reviewer's finding never blocks by verdict — it forces a recorded decision: fix, schedule, accept, or dismiss.
+#### 5. Only deterministic checks can block a merge; an AI reviewer's finding never blocks by verdict — it forces a recorded decision: fix, schedule, accept, or dismiss.
 
 A gate needs answers that are the same on every run. Deterministic tests
 give exactly that. AI reviewers do not: their verdicts can flip between runs
@@ -124,6 +133,11 @@ enforces that every relevant finding receives exactly one recorded
 decision — fix it now, schedule it, accept it deliberately, or dismiss it as
 a false alarm. The decision unblocks; a rerun never does. Re-running a flaky
 verdict until it passes selects an outcome — it does not verify one.
+The gate that enforces this is itself deterministic: what blocks is either
+a red deterministic test or a mechanical bookkeeping fact — a finding
+still awaiting its decision, an expired entry, an overfull queue. The
+block never attaches to an AI verdict; it attaches to something a machine
+can re-check and an agent can resolve by an explicit act.
 
 #### 6. The deterministic layers: static checks and ratchets, unit and integration tests, API and UI journey tests, and requirement fitness functions — every acceptance criterion is covered by at least one of them.
 
@@ -146,8 +160,13 @@ Five deterministic layers, from cheapest to most complete:
 The completeness rule turns this list into a safety property: **every
 acceptance criterion is covered by at least one deterministic end-to-end
 test.** A criterion without coverage is recorded as debt in the
-register — never silently omitted. This is what keeps the rule
-honest: "only deterministic tests block" is safe only if the blocking layer
+register — never silently omitted. Debt is not the only honest state.
+Some criteria resist deterministic form — visual quality,
+comprehensibility, behavior of infrastructure outside the system's own
+surface; those are exempted by explicit human decision, reason recorded,
+and watched by the AI review layer alone. Forbidden is only the third
+state: silent omission. This is what keeps the rule
+honest: "only deterministic checks block" is safe only if the blocking layer
 is complete by construction, so that the AI layer hunts the
 residue — behavior nobody has asserted yet — instead of compensating for
 missing tests.
@@ -157,12 +176,14 @@ missing tests.
 The AI review layer is fully enumerable: one reviewer per norm, one
 reviewer per change to a norm. Standing, per norm:
 
-- **One reviewer per journey**, on every verification run: it drives the
+- **One reviewer per journey**, on every verification run. The reviewer
+  is a small pipeline, not a single session: an *executor* drives the
   running platform through the user interface like a real user and through
-  the API like a real client — in its own fresh session, so no journey's
-  verdict can color another's — and compares what it observes against that
-  journey's text. This is the gap no test suite covers: behavior nobody has
-  written an assertion for yet.
+  the API like a real client, and records what it observes; a *judge* in a
+  separate session — holding only the journey's text and the recorded
+  evidence, no tools — delivers the verdict. Each journey gets its own
+  fresh pair, so no journey's verdict can color another's. This is the gap
+  no test suite covers: behavior nobody has written an assertion for yet.
 - **One auditor per ADR and per audit-enforced requirement**, on a fixed
   cadence; findings go to the register, never into a merge gate.
 - Requirements with deterministic enforcement have no AI reviewer —
@@ -197,23 +218,41 @@ deterministic test already asserts: machine-checkable facts are settled by
 machines, and a reviewer's opinion on them carries no weight. And they never
 review output of their own session.
 
+The asymmetry with the merge gate follows a rule: an AI verdict is given
+authority only where the act is rare, a wrong refusal fails safe, and
+appeal to the human exists. Merges fail all three tests; ratifying a
+weakening passes them — it is rare and deliberate, the conservative error
+is the cheap one when guarding the oracle, and a rejection can escalate
+as a decision request.
+
 ### Flow — from twin environments to merge to production
 
 How a change is judged and where the results travel: the twin-environment
 comparison, what blocks a merge, what gets registered, what it takes to
 close a finding, and what promotion demands.
 
-#### 8. Every change is verified against two twin environments — base without it, head with it; their behavioral difference is the basis of every verdict.
+#### 8. Every change is verified against two twin environments — base without it, head with it; their behavioral difference is the basis of every verdict that needs attribution.
 
 Both environments come up fresh, identically provisioned, production-like
-and disposable — deployed at the same time, driven with the same stimuli.
-The behavioral difference between them is the objective criterion of
-attribution — not an agent's claim, not a historical baseline recorded under
-different conditions. The AI reviewers, too, judge comparatively ("is head
-worse than base anywhere?"), which is measurably more reliable than absolute
-scoring. The set of journeys to verify is computed mechanically from the
+and disposable — driven with the same stimuli.
+The behavioral difference between them is the primary evidence of
+attribution — far stronger than an agent's claim or a historical baseline,
+but evidence, not proof: timing, external services and residual
+nondeterminism can differ between twins, and a scope label can be
+challenged like any other observation. Not every layer needs the pair. The cheap
+deterministic layers — static checks, unit and integration tests — run on
+the change alone: a deterministic red is attributable by itself and blocks
+regardless of what base would show. The twin comparison exists for the
+verdicts where attribution decides everything — end-to-end behavior and
+the AI reviewers' findings, where the difference between "introduced" and
+"pre-existing" is the difference between blocking and registering. The AI reviewers, too, judge comparatively ("is head
+worse than base anywhere?") — a form that has proved far more stable in
+operation than absolute scoring. The set of journeys to verify is computed mechanically from the
 change, never declared by the agent; if it cannot be computed, everything is
-verified. A full sweep additionally runs nightly.
+verified. A full sweep additionally runs nightly. The pair is the
+model's largest standing cost — a deliberate trade of machine hours for
+attribution; whether it still earns its keep is a standing measurement
+question, not an article of faith.
 
 #### 9. A merge is blocked by unmet declared criteria and by regressions the change introduces — never by pre-existing defects, which are registered instead.
 
@@ -282,7 +321,14 @@ from which anything is owed.
 The merge gate onto the development trunk asks only: no new regressions,
 declared criteria met. That keeps incremental construction possible —
 unfinished work may live on the trunk; a UI may exist before its security
-layer does. The promotion gates toward staging and production are fed from
+layer does. This does not collide with the rule that the trunk never
+carries a journey or requirement it does not fulfil. What may be
+unfinished is *capability* — things the specification does not yet
+promise. A normative commitment, once ratified, merges only together with
+the code and tests that satisfy it; and where a reviewer later finds the
+trunk falling short of one, that shortfall becomes a visible register
+entry, never a silent breach. Unfinished capability is allowed;
+unfulfilled commitments are not. The promotion gates toward staging and production are fed from
 the register and are absolute: nothing is promoted to production while open
 entries of defined severity classes exist — security holes, data loss, auth
 bypass, crash loops — no matter how old they are. The severity classes are
@@ -389,6 +435,12 @@ processes that are written down and known to everyone.
 ---
 
 ## Part II — From principle to practice
+
+Part I states the model. Part II shows one concrete realization of it —
+the shape these principles took in the production installation this
+document draws on. Read it as a reference implementation, not as part of
+the claim: where Part I says what must hold, this part shows one way it
+can. Skip freely; return when building.
 
 ### The artifacts and where they live
 
@@ -510,7 +562,10 @@ review cadence retires it.
    both twins. The set of journeys to verify is computed mechanically from
    the change — via the maintained mapping between code paths and criterion
    IDs, the same mapping the coverage check uses; if the mapping cannot
-   resolve the change, everything runs. Every run leaves a verdict attestation in the repo and its
+   resolve the change, everything runs. That mapping is among the most
+   expensive artifacts in the model — a traceability structure with its
+   own drift — which is why the fallback points the safe way: when the
+   mapping thins out, the run gets bigger, never smaller. Every run leaves a verdict attestation in the repo and its
    full protocols in the object store.
 4. **Attribution.** Findings that reproduce on base → registered, not
    blocking. Regressions introduced by the change → a decision is owed
@@ -711,8 +766,8 @@ The human has exactly six touchpoints in this system:
 A harness like this runs mostly unattended; from the outside it is a
 black box that occasionally merges. Measurement exists to open that box.
 The examples below suggest what is worth capturing — they are not a
-complete set, and deliberately not a scorecard. Four questions have
-earned their numbers in practice.
+complete set, and deliberately not a scorecard. Four questions organize
+them.
 
 **Where do time and tokens go?** Per iteration: wall-clock and token
 spend, split into implementing, verifying, and waiting — mean and
@@ -732,8 +787,8 @@ than checking. That one split decides where investment goes: into the
 judges, or into the provisioning underneath them.
 
 **What do the layers let through?** Block rate per layer and per gate.
-Sustained rejection above roughly twenty percent points to a structural
-weakness — and because verdicts are comparative per increment, a desolate
+As a rule of thumb, sustained rejection above roughly twenty percent
+points to a structural weakness — and because verdicts are comparative per increment, a desolate
 overall codebase cannot drive this number up: pre-existing faults are
 exonerated, so a high reject rate always indicts the process, never the
 backlog. Acceptance near one hundred percent deserves the same suspicion:
@@ -837,8 +892,10 @@ Merge gate vs. promotion gate is continuous-delivery standard; the cadences
 and the queue cap are Kanban; the write-protection of the verification
 machinery follows the privileged-config-repo pattern of large CI systems;
 the refusal to let LLM judges gate matches their measured verdict
-reliability. Two building blocks go beyond the published state of practice
-and are original contributions: the **ratchet from discovery to determinism**
+reliability. The main contribution is the composition: a closed
+governance model for engineering without human code review, in which each
+mechanism carries the others. Within it, two building blocks lack, as far
+as the author knows, a counterpart in published practice: the **ratchet from discovery to determinism**
 — every closed finding leaves behind the test that catches it again — and
 the **agentic curation of architecture decisions** under append-only
 discipline with dedicated conformance judges. The latter is the
@@ -859,7 +916,12 @@ govern them, and the gap shows up as the same recurring doubt: nobody can
 say what a system is worth when no human has read what it does.
 
 The sixteen principles are one concrete answer, running in production
-rather than sketched. They are offered as a contribution to that
+rather than sketched. A snapshot from that operation's own records: fifty
+changes merged in one 96-hour stretch, none reviewed by a human and none
+reverted; roughly nine of ten reviewer findings dispositioned mechanically
+by the twin comparison; two vacuously green gates caught by watching
+acceptance rates; implementation about a sixth of cycle wall-clock, most
+of the rest environment provisioning. They are offered as a contribution to that
 discussion, not as a standard: argue with them, copy the parts that hold,
 replace the ones that do not. What they show is that the accountability
 does not have to be given up. It moves — out of the reading of code, into
