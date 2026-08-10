@@ -19,7 +19,7 @@ numbers quoted in Part II come from that installation.
 
 ## Author
 
-Wolfgang Lubowski — solo founder of [TechVera](https://techvera.ai), the
+Wolfgang Lubowski — co-founder of [TechVera](https://techvera.ai), the
 EU LLM platform these principles operate. This document is personal work;
 the platform serves as its case study.
 
