@@ -1,14 +1,14 @@
-# Sixteen principles for software organizations where no human reads the code
+# Seventeen principles for software organizations where no human reads the code
 
 ## A governance model for agentic engineering
 
-*Wolfgang Lubowski · TechVera ([techvera.ai](https://techvera.ai)) · Version 1.0, August 2026*
+*Wolfgang Lubowski · TechVera ([techvera.ai](https://techvera.ai)) · Version 1.1, August 2026*
 
 Software engineering is entering a new operating model: agents increasingly write the implementation, while humans define goals and constraints. Most discussions focus on better models, better prompts, better tools, or better harnesses. Much less attention has been paid to a more fundamental question:
 
 **What are the operating principles of a software organization in which humans no longer review code?**
 
-This document answers that question with **sixteen concrete principles**. They define who owns decisions, which artifacts are normative, how authority is distributed, what constitutes evidence, how changes are verified, and how an agentic software organization remains governable as it scales.
+This document answers that question with **seventeen concrete principles**. They define who owns decisions, which artifacts are normative, how authority is distributed, what constitutes evidence, how changes are verified, and how an agentic software organization remains governable as it scales.
 
 The principles are not design aspirations or best practices. Together they form a coherent operating model that can be implemented directly: each principle introduces a concrete rule, and Part II translates the principles into repositories, permissions, processes, gates, and workflows.
 
@@ -32,7 +32,7 @@ from the start.
 
 ---
 
-## Part I — The sixteen principles
+## Part I — The seventeen principles
 
 ### Authority — who writes what, and who judges
 
@@ -431,6 +431,44 @@ governs, covered by tests, and changed by a recorded change — never edited
 from memory. None of this is peculiar to agents. A human team that decides
 every step on the fly is unreliable for the same reason, and answers with
 processes that are written down and known to everyone.
+
+### Contact with reality — what verification runs against
+
+One principle stands apart: not what is checked or who judges, but what
+the checks are pointed at.
+
+#### 17. Maximize the checks that touch reality: end-to-end and integration verification runs against the real neighboring systems wherever that is possible at all, and its cost is accepted.
+
+A test double encodes what its author believed the other system does, and
+can only ever confirm that belief — including where the real system
+changed last month. The defects that reach customers live in that gap: a
+request field the provider began refusing, a mail path that silently
+stopped delivering, a response shape that moved. Against a stub, all three
+pass forever.
+
+In an agentic organization a second reason weighs heavier. An environment
+that cannot reach the real system manufactures excuses: where a red is
+explained by an unreachable dependency the environment could never have
+reached anyway, the explanation cannot be checked — and an agent under
+pressure to finish prefers the explanation that ends the work. Faked
+surroundings do not merely miss defects; they generate false attributions
+the harness cannot refute. Hence a narrow rule: an external cause is a
+claim until the other system's own answer is recorded verbatim; until then
+the finding stays open and belongs to the system that raised it.
+
+The cost — credentials in every environment, per-call charges, longer
+runs, the intermittent failure of systems nobody controls — is not argued
+away; it buys the only evidence that generalizes to production. Access to
+non-production dependencies is a low-sensitivity, high-frequency good,
+seeded frictionlessly; an environment missing it is a delivery defect, not
+a circumstance. Intermittent failure is triaged like any other finding,
+never grounds to retreat to a double. Where reality genuinely cannot be
+touched — destructive operations, charges beyond a budget, credentials
+that exist only in production — the substitute is a named exception with
+its reason recorded, watched like any other gap; forbidden is the silent
+double. And the direction runs one way: moving a check from a real
+dependency to a substitute weakens the oracle and takes the same guarded
+act as removing a test; moving it toward reality is free.
 
 ---
 
@@ -915,7 +953,7 @@ yet. Teams are adopting agents far faster than they are adopting a way to
 govern them, and the gap shows up as the same recurring doubt: nobody can
 say what a system is worth when no human has read what it does.
 
-The sixteen principles are one concrete answer, running in production
+The seventeen principles are one concrete answer, running in production
 rather than sketched. A snapshot from that operation's own records: fifty
 changes merged in one 96-hour stretch, none reviewed by a human and none
 reverted; roughly nine of ten reviewer findings dispositioned mechanically
