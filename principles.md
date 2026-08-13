@@ -1,4 +1,4 @@
-# Seventeen principles for software organizations where no human reads the code
+# Principles for software organizations where no human reads the code
 
 ## A governance model for agentic engineering
 
@@ -8,7 +8,7 @@ Software engineering is entering a new operating model: agents increasingly writ
 
 **What are the operating principles of a software organization in which humans no longer review code?**
 
-This document answers that question with **seventeen concrete principles**. They define who owns decisions, which artifacts are normative, how authority is distributed, what constitutes evidence, how changes are verified, and how an agentic software organization remains governable as it scales.
+This document answers that question with a set of **concrete operating principles**. They define who owns decisions, which artifacts are normative, how authority is distributed, what constitutes evidence, how changes are verified, and how an agentic software organization remains governable as it scales.
 
 The principles are not design aspirations or best practices. Together they form a coherent operating model that can be implemented directly: each principle introduces a concrete rule, and Part II translates the principles into repositories, permissions, processes, gates, and workflows.
 
@@ -32,11 +32,11 @@ from the start.
 
 ---
 
-## Part I — The seventeen principles
+## Part I — The principles
 
 ### Authority — who writes what, and who judges
 
-Four principles form the constitution of the model: what humans own,
+These principles form the constitution of the model: what humans own,
 how power is layered and protected, and why nobody — human or agent —
 reviews their own work.
 
@@ -434,7 +434,7 @@ processes that are written down and known to everyone.
 
 ### Contact with reality — what verification runs against
 
-One principle stands apart: not what is checked or who judges, but what
+This group stands apart: not what is checked or who judges, but what
 the checks are pointed at.
 
 #### 17. Maximize the checks that touch reality: end-to-end and integration verification runs against the real neighboring systems wherever that is possible at all, and its cost is accepted.
@@ -953,7 +953,7 @@ yet. Teams are adopting agents far faster than they are adopting a way to
 govern them, and the gap shows up as the same recurring doubt: nobody can
 say what a system is worth when no human has read what it does.
 
-The seventeen principles are one concrete answer, running in production
+These principles are one concrete answer, running in production
 rather than sketched. A snapshot from that operation's own records: fifty
 changes merged in one 96-hour stretch, none reviewed by a human and none
 reverted; roughly nine of ten reviewer findings dispositioned mechanically

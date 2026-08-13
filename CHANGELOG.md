@@ -2,6 +2,10 @@
 
 ## 1.1.0 — 2026-08-13
 
+The title and abstract drop the principle count, and the paper moves to
+`principles.md`: the set is open, and a number in the name would force a
+rename with every addition.
+
 Adds principle 17 (*Contact with reality*): end-to-end and integration
 verification runs against the real neighboring systems wherever possible,
 its cost accepted; an external cause is a claim until the other system's

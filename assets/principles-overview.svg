@@ -17,7 +17,7 @@
 
   <!-- subline -->
   <text x="600" y="222" text-anchor="middle" font-family="Liberation Sans, Arial, sans-serif"
-        font-size="28" fill="#5b6067">Seventeen principles in five domains keep the trunk sound anyway.</text>
+        font-size="28" fill="#5b6067">Principles in five domains keep the trunk sound anyway.</text>
 
   <!-- ===== panel: AUTHORITY (top-left) ===== -->
   <g filter="url(#cardshadow)">

@@ -1,10 +1,10 @@
-# Seventeen principles for software organizations where no human reads the code
+# Principles for software organizations where no human reads the code
 
 **A governance model for agentic engineering.**
 
 Coding agents are good enough that the bottleneck has moved: no longer how
 much code an organization can produce, but how much it can be accountable
-for. This document proposes seventeen concrete operating principles for a
+for. This document proposes concrete operating principles for a
 software organization in which humans no longer review code — who owns
 which decisions, what counts as evidence, how changes are verified, and
 how such an organization stays governable. Part II translates the
@@ -12,7 +12,7 @@ principles into repositories, permissions, processes, gates and
 procedures, including what to measure to keep an otherwise opaque harness
 understandable.
 
-**→ [Read the paper](sixteen-principles.md)** (~8,000 words, ≈35 min)
+**→ [Read the paper](principles.md)** (~8,000 words, ≈35 min)
 
 The principles are not design aspirations: they run in production. The
 numbers quoted in Part II come from that installation.
