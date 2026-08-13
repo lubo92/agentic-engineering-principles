@@ -2,6 +2,9 @@
 
 ## 1.1.0 — 2026-08-13
 
+The repository now carries the paper and its metadata only; companion
+material for talks and posts is kept outside it.
+
 The title and abstract drop the principle count, and the paper moves to
 `principles.md`: the set is open, and a number in the name would force a
 rename with every addition.
